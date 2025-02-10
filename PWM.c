@@ -1,28 +1,27 @@
 #include <stdio.h> //Biblioteca padrão da linguagem C
 #include "pico/stdlib.h" //Biblioteca do SDK Pico
 #include "pico/time.h" //Biblioteca para gerenciamento de tempo
-#include "hardware/irq.h" //Biblioteca para gerenciamento de interrupções
 #include "hardware/pwm.h" //Biblioteca para controle de PWM
 
         /*Para teste na BitDogLab, apenas alterar o valor do GPIO do 
         Servo para 12, representando o led azul da placa*/
 
 #define SERVO_PIN 22 //Pino do Servo (GPIO 22)
-#define PWM_FREQ 50  //Frequência do PWM (50Hz → 20ms de período)
 #define CLOCK_DIV 64.0 //Divisor de clock para ajuste fino do PWM
+#define TPWM 20000.0    //Período do PWM -> Ton + Toff
 #define WRAP_VALUE 39063 //Valor de wrap calculado para 50Hz
 
 uint volatile slice_numero;
 
-//Função para calcular o duty cycle com base no tempo do pulso (µs)
-uint16_t calculate_duty_cycle(float pulse_us){
-    return (uint16_t)((pulse_us / 20000.0) * WRAP_VALUE); //20ms = período do PWM
+//Função para calcular o duty cycle com base no tempo do pulso (µs), representado pelo TON
+uint16_t calculate_duty_cycle(float T_ON){
+    return (uint16_t)((T_ON / TPWM) * WRAP_VALUE);
 }
 
 //Define o ângulo do servomotor via PWM
-void servo_angulo(uint slice, float pulse_us){
-    uint16_t duty = calculate_duty_cycle(pulse_us);
-    pwm_set_chan_level(slice, PWM_CHAN_A, duty);
+void servo_angulo(uint slice, float T_ON){
+    uint16_t duty = calculate_duty_cycle(T_ON); //recebe o valor do Duty Cycle
+    pwm_set_gpio_level(SERVO_PIN, duty);         //Define o valor do Duty Cycle
 }
 
 //Inicializa os GPIOs e configura PWM
@@ -37,12 +36,20 @@ void inicializarGPIOS(){
     pwm_set_clkdiv(slice_numero, CLOCK_DIV);
     pwm_set_wrap(slice_numero, WRAP_VALUE);
     pwm_set_enabled(slice_numero, true);
+    
+    /* Cálculo feito
+    Fpwm = 125.000.000 / (63.0 + 0)*39063 
+    Fpwm = 50Hz
+    */
 }
 
 int main(){
     inicializarGPIOS(); //Inicializa os GPIOs e PWM antes do loop
         
-    //Movimentação do servo entre ângulos fixos no inicio do programa
+    /*
+        Movimentação do servo entre ângulos fixos no inicio do programa, 
+        passando o angulo convertido para pulso(µs)
+    */
     //180 graus
     printf("Movendo para 180 graus\n");
     servo_angulo(slice_numero, 2400); //180° -> 2400µs
@@ -57,7 +64,6 @@ int main(){
     sleep_ms(5000);
 
     while(1){
-
     //Rotina de movimentação constante entre 0° e 180° com incrementos de 5µs a cada 10ms
     printf("Movimentação suave iniciada\n");
 
@@ -75,6 +81,8 @@ int main(){
     }
 }
 
-//180 graus a luz do led fica mais intensa, chegando a 0 graus sua luz fica menos intensa. Fica ainda mais
-//visível quando o a movimentação constante de 0 a 180 graus, e vice versa, acontece de maneira que a intensidade
-//do led vai aumentando ou diminuindo gradativamente
+/*
+180 graus a luz do led fica mais intensa, chegando a 0 graus sua luz fica menos intensa. 
+Fica ainda mais visível quando o a movimentação constante de 0 a 180 graus, e vice versa, 
+acontece de maneira que a intensidade do led vai aumentando ou diminuindo gradativamente.
+*/
