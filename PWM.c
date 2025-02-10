@@ -4,7 +4,9 @@
 #include "hardware/irq.h" //Biblioteca para gerenciamento de interrupções
 #include "hardware/pwm.h" //Biblioteca para controle de PWM
 
-#define LED_PIN 12  //Pino do LED RGB (GPIO 12)
+        /*Para teste na BitDogLab, apenas alterar o valor do GPIO do 
+        Servo para 12, representando o led azul da placa*/
+
 #define SERVO_PIN 22 //Pino do Servo (GPIO 22)
 #define PWM_FREQ 50  //Frequência do PWM (50Hz → 20ms de período)
 #define CLOCK_DIV 64.0 //Divisor de clock para ajuste fino do PWM
@@ -35,10 +37,6 @@ void inicializarGPIOS(){
     pwm_set_clkdiv(slice_numero, CLOCK_DIV);
     pwm_set_wrap(slice_numero, WRAP_VALUE);
     pwm_set_enabled(slice_numero, true);
-
-    //Configuração do pino LED RGB como saída
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
 }
 
 int main(){
@@ -60,8 +58,8 @@ int main(){
 
     while(1){
 
-        //Rotina de movimentação constante entre 0° e 180° com incrementos de 5µs a cada 10ms
-        printf("Movimentação suave iniciada\n");
+    //Rotina de movimentação constante entre 0° e 180° com incrementos de 5µs a cada 10ms
+    printf("Movimentação suave iniciada\n");
 
         //Movendo de 0° para 180° (+5µs a cada 10ms)
         for(float pulse = 500; pulse <= 2400; pulse += 5){
@@ -76,3 +74,7 @@ int main(){
         }
     }
 }
+
+//180 graus a luz do led fica mais intensa, chegando a 0 graus sua luz fica menos intensa. Fica ainda mais
+//visível quando o a movimentação constante de 0 a 180 graus, e vice versa, acontece de maneira que a intensidade
+//do led vai aumentando ou diminuindo gradativamente
