@@ -34,22 +34,21 @@ Wokwi Simulator
 CMake configurado
 
 ## Passos
-**Simulação no Wokwi (VS Code)**
-Importe o projeto (pasta) utilizando a extensão Raspberry Pi Pico Project.
-Compile o projeto pela extensão.
+**Simulação no Wokwi (VS Code):**
+- Importe o projeto (pasta) utilizando a extensão Raspberry Pi Pico Project.
+- Compile o projeto pela extensão.
 No Wokwi, abra o arquivo diagram.json e execute (Play).
 
-**Execução na Placa BitDogLab**
-Compile o projeto para gerar o arquivo .uf2.
-Envie o arquivo .uf2 para a placa Raspberry Pi Pico.
+**Execução na Placa BitDogLab:**
+- Compile o projeto para gerar o arquivo .uf2.
+- Envie o arquivo .uf2 para a placa Raspberry Pi Pico.
 
 ## 📌 Notas
 - Para testar na **BitDog Lab**, altere `#define SERVO_PIN 22` para `#define SERVO_PIN 12`.
 - Este projeto requer a biblioteca pico-sdk, que deve estar corretamente configurada no ambiente de desenvolvimento.
 
 ## Análise do teste com a BitDogLab, utilizando o LED azul
-180 graus a luz do led fica mais intensa, chegando a 0 graus sua luz fica menos intensa. 
-Fica ainda mais visível quando o a movimentação constante de 0 a 180 graus, e vice versa, acontece de maneira que a intensidade do led vai aumentando ou diminuindo gradativamente.
+Em 180 graus a luz do led fica mais intensa, em 90 graus menos intensa, e chegando a 0 graus sua luz fica ainda menos intensa. Fica ainda mais visível quando o a movimentação constante de 0 a 180 graus, e vice versa, acontece de maneira que a intensidade do led vai aumentando ou diminuindo gradativamente.
 
 ## Demonstração
 
