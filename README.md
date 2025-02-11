@@ -52,6 +52,6 @@ Em 180 graus a luz do led fica mais intensa, em 90 graus menos intensa, e chegan
 
 ## Demonstração
 
-Assista uma breve apresentação do código acessando o link: https://youtu.be/_e4Uw0zU5fo
+Assista uma breve apresentação do código, além das simulações no Wokwi e na placa BitDogLab, acessando o link: https://youtu.be/_e4Uw0zU5fo
 
 **Autor:** *Leonam S. Rabelo*
