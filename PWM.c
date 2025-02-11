@@ -8,7 +8,7 @@
 
 #define SERVO_PIN 22 //Pino do Servo (GPIO 22)
 #define CLOCK_DIV 64.0 //Divisor de clock para ajuste fino do PWM
-#define TPWM 20000.0    //Período do PWM -> Ton + Toff
+#define TPWM 20000.0    //Período do PWM -> Ton + Toff 20ms->20000µs
 #define WRAP_VALUE 39063 //Valor de wrap calculado para 50Hz
 
 uint volatile slice_numero;
@@ -32,7 +32,7 @@ void inicializarGPIOS(){
     gpio_set_function(SERVO_PIN, GPIO_FUNC_PWM);
     slice_numero = pwm_gpio_to_slice_num(SERVO_PIN); //Obtém o slice PWM do servo
 
-    //Configuração do PWM com período de 20ms (50Hz)
+    //Configuração do PWM com período de 20ms (50Hz) (Q1)
     pwm_set_clkdiv(slice_numero, CLOCK_DIV);
     pwm_set_wrap(slice_numero, WRAP_VALUE);
     pwm_set_enabled(slice_numero, true);
@@ -50,15 +50,17 @@ int main(){
         Movimentação do servo entre ângulos fixos no inicio do programa, 
         passando o angulo convertido para pulso(µs)
     */
-    //180 graus
+    //Duty Cycle = (2400/20000)*100 = 12% (Q2)
     printf("Movendo para 180 graus\n");
     servo_angulo(slice_numero, 2400); //180° -> 2400µs
     sleep_ms(5000);
-    //90 graus
+
+    //Duty Cycle = (1470/20000)*100 = 7,35%
     printf("Movendo para 90 graus\n");
     servo_angulo(slice_numero, 1470); //90° -> 1470µs
     sleep_ms(5000);
-    //0 graus
+
+    //Duty Cycle = (500/20000)*100 = 2,5%
     printf("Movendo para 0 graus\n");
     servo_angulo(slice_numero, 500); //0° -> 500µs
     sleep_ms(5000);
@@ -70,19 +72,21 @@ int main(){
         //Movendo de 0° para 180° (+5µs a cada 10ms)
         for(float pulse = 500; pulse <= 2400; pulse += 5){
             servo_angulo(slice_numero, pulse);
-            sleep_ms(10);
+            sleep_ms(10);   //Atraso de ajuste em 10 ms
         }
 
         //Movendo de 180° para 0° (-5µs a cada 10ms)
         for(float pulse = 2400; pulse >= 500; pulse -= 5){
             servo_angulo(slice_numero, pulse);
-            sleep_ms(10);
+            sleep_ms(10);   //Atraso de ajuste em 10 ms
         }
     }
 }
 
 /*
-180 graus a luz do led fica mais intensa, chegando a 0 graus sua luz fica menos intensa. 
-Fica ainda mais visível quando o a movimentação constante de 0 a 180 graus, e vice versa, 
-acontece de maneira que a intensidade do led vai aumentando ou diminuindo gradativamente.
+Em 180 graus a luz do led fica mais intensa, em 90 graus diminui a intensidade da luz do led
+e a 0 graus sua luz fica ainda menos intensa. 
+Fica ainda mais visível quando ocorrre a mudança constante de 0 a 180 graus, e vice versa, e
+acontece de maneira que a intensidade da luz do led vai aumentando (de 0 a 180 graus) ou diminuindo 
+(de 180 a 0 graus) gradativamente.
 */
