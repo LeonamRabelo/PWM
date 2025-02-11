@@ -55,18 +55,18 @@ int main(){
     servo_angulo(slice_numero, 2400); //180° -> 2400µs
     sleep_ms(5000);
 
-    //Duty Cycle = (1470/20000)*100 = 7,35%
+    //Duty Cycle = (1470/20000)*100 = 7,35% (Q3)
     printf("Movendo para 90 graus\n");
     servo_angulo(slice_numero, 1470); //90° -> 1470µs
     sleep_ms(5000);
 
-    //Duty Cycle = (500/20000)*100 = 2,5%
+    //Duty Cycle = (500/20000)*100 = 2,5% (Q4)
     printf("Movendo para 0 graus\n");
     servo_angulo(slice_numero, 500); //0° -> 500µs
     sleep_ms(5000);
 
     while(1){
-    //Rotina de movimentação constante entre 0° e 180° com incrementos de 5µs a cada 10ms
+    //Rotina de movimentação constante entre 0° e 180° com incrementos de 5µs a cada 10ms (Q5)
     printf("Movimentação suave iniciada\n");
 
         //Movendo de 0° para 180° (+5µs a cada 10ms)
@@ -83,7 +83,7 @@ int main(){
     }
 }
 
-/*
+/* (Questão 6, demonstrada no vídeo)
 Em 180 graus a luz do led fica mais intensa, em 90 graus diminui a intensidade da luz do led
 e a 0 graus sua luz fica ainda menos intensa. 
 Fica ainda mais visível quando ocorrre a mudança constante de 0 a 180 graus, e vice versa, e
